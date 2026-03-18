@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ListCraft — Professionelle eBay Artikelseiten</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0b;
+    --bg-card: #141416;
+    --text: #f0efe9;
+    --text-muted: #8a8a8e;
+    --accent: #c8ff2e;
+    --accent-dim: rgba(200, 255, 46, 0.12);
+    --border: #2a2a2e;
+    --radius: 16px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden; }
+
+  /* NAV */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; background: rgba(10,10,11,0.8); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+  .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.4rem; letter-spacing: -0.5px; }
+  .logo span { color: var(--accent); }
+  nav a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.3s; }
+  nav a:hover { color: var(--accent); }
+  .nav-links { display: flex; gap: 32px; }
+
+  /* HERO */
+  .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 140px 24px 80px; position: relative; }
+  .hero::before { content: ''; position: absolute; top: -20%; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(200,255,46,0.06) 0%, transparent 70%); pointer-events: none; }
+  .hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 18px; background: var(--accent-dim); border: 1px solid rgba(200,255,46,0.2); border-radius: 100px; font-size: 0.82rem; font-weight: 500; color: var(--accent); margin-bottom: 32px; animation: fadeDown 0.8s ease-out; }
+  .hero-badge::before { content: ''; width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: pulse-dot 2s infinite; }
+  @keyframes pulse-dot { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+  .hero h1 { font-family: 'Syne', sans-serif; font-size: clamp(2.8rem,7vw,5.5rem); font-weight: 800; line-height: 1.05; letter-spacing: -2px; max-width: 800px; animation: fadeDown 0.8s ease-out 0.1s both; }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .hero p { font-size: 1.15rem; color: var(--text-muted); max-width: 520px; margin-top: 24px; animation: fadeDown 0.8s ease-out 0.2s both; }
+  .hero-cta { display: flex; gap: 16px; margin-top: 48px; animation: fadeDown 0.8s ease-out 0.3s both; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 32px; border-radius: 100px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 600; text-decoration: none; cursor: pointer; border: none; transition: all 0.3s ease; }
+  .btn-primary { background: var(--accent); color: #0a0a0b; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(200,255,46,0.3); }
+  .btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  .btn-ghost:hover { border-color: var(--text-muted); background: rgba(255,255,255,0.03); }
+
+  /* STATS */
+  .stats { display: flex; justify-content: center; gap: 64px; padding: 0 24px 80px; animation: fadeDown 0.8s ease-out 0.4s both; }
+  .stat { text-align: center; }
+  .stat-num { font-family: 'Syne', sans-serif; font-size: 2.4rem; font-weight: 800; color: var(--accent); }
+  .stat-label { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
+
+  /* SECTION */
+  section { padding: 100px 24px; }
+  .section-label { font-family: 'Syne', sans-serif; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; color: var(--accent); margin-bottom: 16px; }
+  .section-title { font-family: 'Syne', sans-serif; font-size: clamp(2rem,4vw,3rem); font-weight: 800; letter-spacing: -1px; line-height: 1.1; max-width: 600px; }
+  .section-header { text-align: center; display: flex; flex-direction: column; align-items: center; margin-bottom: 64px; }
+
+  /* PORTFOLIO */
+  #portfolio { background: var(--bg); }
+  .portfolio-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(2,1fr); gap: 24px; }
+  .portfolio-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: all 0.4s ease; cursor: default; }
+  .portfolio-card:hover { border-color: rgba(200,255,46,0.3); transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+  .card-preview { width: 100%; aspect-ratio: 16/10; overflow: hidden; }
+  .card-info { padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); }
+  .card-category { font-weight: 600; font-size: 0.95rem; }
+  .card-tag { font-size: 0.75rem; color: var(--accent); background: var(--accent-dim); padding: 4px 12px; border-radius: 100px; }
+
+  /* ═══════════════════════════════════════════
+     TEMPLATE 1: ELECTRONICS — Apple Clean
+     ═══════════════════════════════════════════ */
+  .t1 { width:100%; height:100%; background:#fff; font-family:-apple-system,'Helvetica Neue',sans-serif; display:flex; flex-direction:column; overflow:hidden; color:#1d1d1f; }
+  .t1-hero { text-align:center; padding:20px 20px 14px; background:linear-gradient(135deg,#f5f5f7,#e8e8ed,#f5f5f7); }
+  .t1-badge { display:inline-block; background:linear-gradient(135deg,#1d1d1f,#3a3a3c); color:#fff; font-size:6.5px; font-weight:700; letter-spacing:1px; padding:3px 10px; border-radius:20px; margin-bottom:8px; }
+  .t1-title { font-size:16px; font-weight:700; letter-spacing:-0.3px; }
+  .t1-sub { font-size:9px; color:#86868b; margin-top:4px; }
+  .t1-line { width:28px; height:2px; background:linear-gradient(90deg,#0071e3,#40a9ff); border-radius:2px; margin:8px auto 0; }
+  .t1-strip { display:flex; border-top:1px solid #e8e8ed; border-bottom:1px solid #e8e8ed; background:#fafafa; }
+  .t1-strip-item { flex:1; text-align:center; padding:10px 4px; position:relative; }
+  .t1-strip-item:not(:last-child)::after { content:''; position:absolute; right:0; top:20%; height:60%; width:1px; background:#e0e0e5; }
+  .t1-strip-icon { font-size:12px; margin-bottom:3px; }
+  .t1-strip-val { font-size:9px; font-weight:700; color:#1d1d1f; }
+  .t1-strip-lbl { font-size:5.5px; color:#86868b; text-transform:uppercase; letter-spacing:0.5px; font-weight:600; margin-top:1px; }
+  .t1-cards { display:flex; gap:6px; padding:10px 12px; flex:1; }
+  .t1-card { flex:1; background:#f5f5f7; border-radius:8px; padding:8px 7px; text-align:center; }
+  .t1-card-icon { font-size:14px; margin-bottom:3px; }
+  .t1-card-h { font-size:7px; font-weight:700; color:#1d1d1f; margin-bottom:2px; }
+  .t1-card-p { font-size:5.5px; color:#86868b; line-height:1.3; }
+  .t1-foot { text-align:center; padding:8px; background:#f5f5f7; border-top:1px solid #e8e8ed; font-size:6px; color:#86868b; }
+  .t1-foot strong { color:#1d1d1f; }
+
+  /* ═══════════════════════════════════════════
+     TEMPLATE 2: FASHION — Dark Luxury
+     ═══════════════════════════════════════════ */
+  .t2 { width:100%; height:100%; background:#0c0a08; font-family:Georgia,'Times New Roman',serif; display:flex; flex-direction:column; overflow:hidden; color:#f5efe6; }
+  .t2-hero { text-align:center; padding:22px 20px 12px; position:relative; border-bottom:1px solid #2a2418; }
+  .t2-hero::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 50% 0%, rgba(196,164,106,0.08) 0%, transparent 70%); }
+  .t2-ornament { font-size:7px; letter-spacing:6px; color:#c4a46a; margin-bottom:6px; position:relative; }
+  .t2-brand { font-size:7px; font-weight:400; letter-spacing:4px; text-transform:uppercase; color:#c4a46a; margin-bottom:10px; }
+  .t2-title { font-size:17px; font-weight:400; letter-spacing:1px; color:#f5efe6; line-height:1.2; font-style:italic; }
+  .t2-detail { font-size:8px; color:#7a7060; margin-top:6px; letter-spacing:1px; }
+  .t2-divider { display:flex; align-items:center; gap:8px; justify-content:center; margin-top:10px; }
+  .t2-divider-line { width:40px; height:1px; background:linear-gradient(90deg,transparent,#c4a46a,transparent); }
+  .t2-divider-diamond { width:5px; height:5px; background:#c4a46a; transform:rotate(45deg); }
+  .t2-features { display:flex; padding:12px 16px; gap:2px; border-bottom:1px solid #1a1610; }
+  .t2-feat { flex:1; text-align:center; padding:8px 4px; }
+  .t2-feat-icon { font-size:14px; margin-bottom:4px; display:block; }
+  .t2-feat-label { font-size:6px; color:#c4a46a; text-transform:uppercase; letter-spacing:1.5px; font-family:-apple-system,sans-serif; font-weight:600; }
+  .t2-feat-val { font-size:8px; color:#f5efe6; margin-top:2px; font-style:normal; font-family:-apple-system,sans-serif; }
+  .t2-mid { flex:1; display:flex; align-items:center; justify-content:center; padding:10px 16px; gap:16px; }
+  .t2-info-col { text-align:center; }
+  .t2-info-label { font-size:5.5px; color:#7a7060; text-transform:uppercase; letter-spacing:2px; font-family:-apple-system,sans-serif; font-weight:600; margin-bottom:3px; }
+  .t2-info-val { font-size:8.5px; color:#f5efe6; font-family:-apple-system,sans-serif; }
+  .t2-info-sep { width:1px; height:28px; background:#2a2418; }
+  .t2-foot { text-align:center; padding:8px; background:#0a0806; border-top:1px solid #2a2418; }
+  .t2-foot-text { font-size:5.5px; color:#7a7060; font-family:-apple-system,sans-serif; letter-spacing:1px; }
+
+  /* ═══════════════════════════════════════════
+     TEMPLATE 3: AUTO — Industrial Bold
+     ═══════════════════════════════════════════ */
+  .t3 { width:100%; height:100%; background:#f0f0f0; font-family:-apple-system,'Helvetica Neue',sans-serif; display:flex; flex-direction:column; overflow:hidden; color:#1a1a1a; }
+  .t3-topbar { display:flex; align-items:center; justify-content:space-between; padding:0; background:#1a1a1a; }
+  .t3-topbar-brand { font-size:7px; font-weight:800; letter-spacing:2px; color:#fff; text-transform:uppercase; padding:8px 14px; }
+  .t3-topbar-tags { display:flex; gap:0; }
+  .t3-topbar-tag { font-size:5.5px; font-weight:700; padding:8px 10px; text-transform:uppercase; letter-spacing:0.8px; }
+  .t3-topbar-tag.red { background:#e63946; color:#fff; }
+  .t3-topbar-tag.dark { background:#2a2a2a; color:#999; }
+  .t3-hero3 { padding:14px 16px 10px; background:#fff; border-bottom:3px solid #e63946; }
+  .t3-h-row { display:flex; justify-content:space-between; align-items:flex-start; }
+  .t3-h-left {}
+  .t3-h-title { font-size:14px; font-weight:800; letter-spacing:-0.3px; color:#1a1a1a; line-height:1.1; }
+  .t3-h-sub { font-size:8px; color:#777; margin-top:3px; font-weight:500; }
+  .t3-h-price { text-align:right; }
+  .t3-price-val { font-size:18px; font-weight:800; color:#e63946; letter-spacing:-0.5px; }
+  .t3-price-lbl { font-size:5.5px; color:#999; text-transform:uppercase; letter-spacing:1px; font-weight:600; }
+  .t3-specs { display:flex; gap:0; background:#1a1a1a; }
+  .t3-spec { flex:1; text-align:center; padding:10px 4px; position:relative; }
+  .t3-spec:not(:last-child)::after { content:''; position:absolute; right:0; top:15%; height:70%; width:1px; background:#333; }
+  .t3-spec-val { font-size:10px; font-weight:800; color:#fff; }
+  .t3-spec-lbl { font-size:5px; color:#666; text-transform:uppercase; letter-spacing:1px; font-weight:600; margin-top:2px; }
+  .t3-grid { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:#ddd; flex:1; }
+  .t3-grid-cell { background:#fff; padding:10px 12px; display:flex; align-items:center; gap:8px; }
+  .t3-grid-icon { font-size:16px; flex-shrink:0; }
+  .t3-grid-text {}
+  .t3-grid-h { font-size:7.5px; font-weight:700; color:#1a1a1a; margin-bottom:1px; }
+  .t3-grid-p { font-size:5.5px; color:#888; line-height:1.3; }
+  .t3-foot3 { display:flex; align-items:center; justify-content:center; gap:6px; padding:7px; background:#1a1a1a; }
+  .t3-foot3-text { font-size:5.5px; color:#666; font-weight:500; }
+  .t3-foot3-dot { width:3px; height:3px; border-radius:50%; background:#e63946; }
+
+  /* ═══════════════════════════════════════════
+     TEMPLATE 4: HOME — Warm Organic
+     ═══════════════════════════════════════════ */
+  .t4 { width:100%; height:100%; background:#faf7f2; font-family:-apple-system,'Helvetica Neue',sans-serif; display:flex; flex-direction:column; overflow:hidden; color:#3a3028; }
+  .t4-hero { text-align:center; padding:18px 20px 12px; background:linear-gradient(180deg,#f0ebe2,#faf7f2); position:relative; }
+  .t4-leaf { font-size:14px; margin-bottom:4px; }
+  .t4-brand { font-size:6.5px; letter-spacing:3px; text-transform:uppercase; color:#8b7355; font-weight:600; margin-bottom:8px; }
+  .t4-title { font-size:15px; font-weight:700; color:#3a3028; letter-spacing:-0.2px; line-height:1.2; }
+  .t4-sub { font-size:8px; color:#a09080; margin-top:4px; }
+  .t4-dots { display:flex; gap:4px; justify-content:center; margin-top:8px; }
+  .t4-dot { width:4px; height:4px; border-radius:50%; background:#c9b896; }
+  .t4-dot.active { background:#8b7355; width:16px; border-radius:4px; }
+  .t4-pills { display:flex; gap:6px; padding:12px 14px; justify-content:center; flex-wrap:wrap; border-bottom:1px solid #e8e0d4; }
+  .t4-pill { display:flex; align-items:center; gap:4px; background:#fff; border:1px solid #e8e0d4; border-radius:20px; padding:5px 10px; }
+  .t4-pill-icon { font-size:10px; }
+  .t4-pill-text { font-size:6.5px; font-weight:600; color:#5a4a38; }
+  .t4-content { flex:1; display:flex; gap:8px; padding:10px 14px; }
+  .t4-bigcard { flex:1; background:#fff; border-radius:12px; padding:12px; border:1px solid #e8e0d4; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; }
+  .t4-bigcard-icon { font-size:20px; margin-bottom:4px; }
+  .t4-bigcard-h { font-size:8px; font-weight:700; color:#3a3028; margin-bottom:2px; }
+  .t4-bigcard-p { font-size:5.5px; color:#a09080; line-height:1.4; }
+  .t4-sidebar { width:42%; display:flex; flex-direction:column; gap:6px; }
+  .t4-mini { background:#fff; border-radius:10px; padding:8px 10px; border:1px solid #e8e0d4; display:flex; align-items:center; gap:6px; flex:1; }
+  .t4-mini-icon { font-size:12px; flex-shrink:0; }
+  .t4-mini-text {}
+  .t4-mini-h { font-size:6.5px; font-weight:700; color:#3a3028; }
+  .t4-mini-p { font-size:5px; color:#a09080; }
+  .t4-foot { text-align:center; padding:8px; background:#f0ebe2; border-top:1px solid #e8e0d4; }
+  .t4-foot-text { font-size:5.5px; color:#a09080; }
+  .t4-foot-text strong { color:#5a4a38; }
+
+  /* ═══════════════════════════════════════════
+     VORHER / NACHHER
+     ═══════════════════════════════════════════ */
+  #vergleich { background: var(--bg-card); }
+  .compare-container { max-width:1000px; margin:0 auto; display:grid; grid-template-columns:1fr auto 1fr; gap:32px; align-items:center; }
+  .compare-box { border-radius:var(--radius); overflow:hidden; border:1px solid var(--border); }
+  .compare-label { padding:12px 20px; font-family:'Syne',sans-serif; font-size:0.8rem; font-weight:700; text-transform:uppercase; letter-spacing:2px; text-align:center; }
+  .compare-before .compare-label { background:#1a1216; color:#e05555; border-bottom:1px solid var(--border); }
+  .compare-after .compare-label { background:#121a13; color:var(--accent); border-bottom:1px solid var(--border); }
+  .compare-content { padding:24px; min-height:200px; display:flex; flex-direction:column; }
+  .compare-before .compare-content, .compare-after .compare-content { background:#111; }
+  .ugly-listing { font-family:'Times New Roman',serif; font-size:0.8rem; color:#999; line-height:1.8; }
+  .ugly-listing .ugly-title { font-size:1rem; font-weight:bold; color:#cc0000; text-transform:uppercase; margin-bottom:8px; }
+  .ugly-listing .ugly-line { border-bottom:2px dashed #333; margin:8px 0; }
+  .ugly-listing .ugly-blink { color:#ff6600; font-weight:bold; font-size:0.85rem; }
+  .ugly-listing .ugly-small { font-size:0.7rem; color:#666; }
+  .nice-mini { background:#fff; border-radius:10px; overflow:hidden; font-family:-apple-system,sans-serif; color:#1d1d1f; }
+  .nice-mini-hero { background:#f5f5f7; text-align:center; padding:14px 12px 10px; }
+  .nice-mini-badge { display:inline-block; background:#1d1d1f; color:#fff; font-size:5.5px; font-weight:700; padding:2px 8px; border-radius:10px; letter-spacing:0.8px; margin-bottom:5px; }
+  .nice-mini-title { font-size:11px; font-weight:700; letter-spacing:-0.2px; }
+  .nice-mini-sub { font-size:7px; color:#86868b; margin-top:2px; }
+  .nice-mini-hl { display:flex; border-top:1px solid #e8e8ed; border-bottom:1px solid #e8e8ed; background:#fafafa; }
+  .nice-mini-hl div { flex:1; text-align:center; padding:7px 2px; font-size:5.5px; color:#86868b; border-right:1px solid #e8e8ed; }
+  .nice-mini-hl div:last-child { border:none; }
+  .nice-mini-hl .hl-icon { font-size:9px; display:block; margin-bottom:2px; }
+  .nice-mini-hl .hl-val { font-size:7px; font-weight:700; color:#1d1d1f; display:block; }
+  .compare-arrow { font-family:'Syne',sans-serif; font-size:2rem; font-weight:800; color:var(--accent); text-align:center; }
+
+  /* PROCESS */
+  #process { background: var(--bg); }
+  .process-grid { max-width:900px; margin:0 auto; display:grid; grid-template-columns:repeat(3,1fr); gap:32px; }
+  .process-step { text-align:center; padding:32px 24px; border:1px solid var(--border); border-radius:var(--radius); background:var(--bg-card); transition:all 0.3s; }
+  .process-step:hover { border-color:rgba(200,255,46,0.2); }
+  .step-num { font-family:'Syne',sans-serif; font-size:2.5rem; font-weight:800; color:var(--accent); opacity:0.3; margin-bottom:12px; }
+  .step-title { font-family:'Syne',sans-serif; font-weight:700; font-size:1.1rem; margin-bottom:8px; }
+  .step-desc { font-size:0.85rem; color:var(--text-muted); line-height:1.5; }
+
+  /* PRICING */
+  #pricing { background: var(--bg-card); }
+  .pricing-grid { max-width:900px; margin:0 auto; display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+  .pricing-card { background:var(--bg); border:1px solid var(--border); border-radius:var(--radius); padding:36px 28px; display:flex; flex-direction:column; transition:all 0.4s; }
+  .pricing-card:hover { transform:translateY(-4px); border-color:rgba(200,255,46,0.2); }
+  .pricing-card.featured { border-color:var(--accent); position:relative; }
+  .pricing-card.featured::before { content:'BELIEBT'; position:absolute; top:-12px; left:50%; transform:translateX(-50%); background:var(--accent); color:var(--bg); font-family:'Syne',sans-serif; font-size:0.65rem; font-weight:800; letter-spacing:2px; padding:4px 16px; border-radius:100px; }
+  .pricing-tier { font-family:'Syne',sans-serif; font-weight:700; font-size:0.85rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:2px; margin-bottom:8px; }
+  .pricing-amount { font-family:'Syne',sans-serif; font-size:2.8rem; font-weight:800; margin-bottom:4px; }
+  .pricing-amount span { font-size:1rem; color:var(--text-muted); }
+  .pricing-desc { font-size:0.85rem; color:var(--text-muted); margin-bottom:24px; line-height:1.5; }
+  .pricing-features { list-style:none; flex:1; margin-bottom:28px; }
+  .pricing-features li { padding:8px 0; font-size:0.88rem; color:var(--text-muted); border-bottom:1px solid rgba(255,255,255,0.04); display:flex; align-items:center; gap:10px; }
+  .pricing-features li::before { content:'✓'; color:var(--accent); font-weight:700; font-size:0.8rem; }
+  .pricing-card .btn { text-align:center; justify-content:center; width:100%; }
+
+  /* CTA */
+  .cta-section { padding:120px 24px; text-align:center; position:relative; background:var(--bg); }
+  .cta-section::before { content:''; position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:500px; height:500px; background:radial-gradient(circle,rgba(200,255,46,0.04) 0%,transparent 70%); pointer-events:none; }
+  .cta-section .section-title { max-width:700px; margin:0 auto 16px; }
+  .cta-section p { color:var(--text-muted); font-size:1.1rem; max-width:480px; margin:0 auto 40px; }
+  .cta-contact-info { margin-top:24px; font-size:0.9rem; color:var(--text-muted); }
+  .cta-contact-info strong { color:var(--text); }
+
+  footer { padding:32px 40px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:var(--text-muted); }
+  @keyframes fadeDown { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+  .fade-in { opacity:0; transform:translateY(30px); transition:all 0.7s ease-out; }
+  .fade-in.visible { opacity:1; transform:translateY(0); }
+
+  @media (max-width:768px) {
+    nav { padding:16px 20px; } .nav-links { display:none; }
+    .portfolio-grid { grid-template-columns:1fr; }
+    .process-grid { grid-template-columns:1fr; }
+    .pricing-grid { grid-template-columns:1fr; max-width:400px; }
+    .stats { gap:32px; flex-wrap:wrap; }
+    .hero-cta { flex-direction:column; align-items:center; }
+    section { padding:60px 16px; }
+    .compare-container { grid-template-columns:1fr; }
+    .compare-arrow { transform:rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">List<span>Craft</span></div>
+  <div class="nav-links">
+    <a href="#portfolio">Portfolio</a>
+    <a href="#vergleich">Vorher / Nachher</a>
+    <a href="#process">Ablauf</a>
+    <a href="#pricing">Preise</a>
+    <a href="#kontakt">Kontakt</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">Jetzt verfügbar — limitierte Plätze</div>
+  <h1>Deine eBay Listings verdienen ein <em>Upgrade</em></h1>
+  <p>Professionelle HTML-Artikelseiten, die Vertrauen schaffen und deine Verkaufszahlen steigern. Kein Standard-Template — individuell für deinen Shop.</p>
+  <div class="hero-cta">
+    <a href="#portfolio" class="btn btn-primary">Portfolio ansehen ↓</a>
+    <a href="#kontakt" class="btn btn-ghost">Jetzt anfragen</a>
+  </div>
+</section>
+
+<div class="stats">
+  <div class="stat"><div class="stat-num">100%</div><div class="stat-label">eBay-konform</div></div>
+  <div class="stat"><div class="stat-num">24h</div><div class="stat-label">Lieferzeit</div></div>
+  <div class="stat"><div class="stat-num">Mobile</div><div class="stat-label">Optimiert</div></div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PORTFOLIO — 4 UNIQUE TEMPLATES
+     ════════════════════════════════════════════ -->
+<section id="portfolio">
+  <div class="section-header">
+    <div class="section-label">Portfolio</div>
+    <div class="section-title">4 einzigartige Design-Stile</div>
+  </div>
+  <div class="portfolio-grid">
+
+    <!-- T1: ELECTRONICS — Apple Clean -->
+    <div class="portfolio-card fade-in">
+      <div class="card-preview">
+        <div class="t1">
+          <div class="t1-hero">
+            <div class="t1-badge">TECHSTORE 24</div>
+            <div class="t1-title">iPhone 17 Pro Max</div>
+            <div class="t1-sub">256 GB · Deep Blue</div>
+            <div class="t1-line"></div>
+          </div>
+          <div class="t1-strip">
+            <div class="t1-strip-item"><div class="t1-strip-icon">📱</div><div class="t1-strip-val">256 GB</div><div class="t1-strip-lbl">Speicher</div></div>
+            <div class="t1-strip-item"><div class="t1-strip-icon">✅</div><div class="t1-strip-val">Apple</div><div class="t1-strip-lbl">Garantie</div></div>
+            <div class="t1-strip-item"><div class="t1-strip-icon">✨</div><div class="t1-strip-val">Neu</div><div class="t1-strip-lbl">Versiegelt</div></div>
+            <div class="t1-strip-item"><div class="t1-strip-icon">🧾</div><div class="t1-strip-val">Rechnung</div><div class="t1-strip-lbl">Inklusive</div></div>
+          </div>
+          <div class="t1-cards">
+            <div class="t1-card"><div class="t1-card-icon">📦</div><div class="t1-card-h">Blitzversand</div><div class="t1-card-p">DHL 1-2 Werktage</div></div>
+            <div class="t1-card"><div class="t1-card-icon">🛡️</div><div class="t1-card-h">Garantie</div><div class="t1-card-p">24 Mon. Gewähr</div></div>
+            <div class="t1-card"><div class="t1-card-icon">💳</div><div class="t1-card-h">Sicher zahlen</div><div class="t1-card-p">PayPal, Klarna</div></div>
+            <div class="t1-card"><div class="t1-card-icon">📋</div><div class="t1-card-h">Komplett</div><div class="t1-card-p">OVP + Zubehör</div></div>
+          </div>
+          <div class="t1-foot">Vielen Dank für Ihr Interesse! · <strong>TechStore 24</strong></div>
+        </div>
+      </div>
+      <div class="card-info"><div class="card-category">Elektronik & Smartphones</div><div class="card-tag">Apple Clean</div></div>
+    </div>
+
+    <!-- T2: FASHION — Dark Luxury -->
+    <div class="portfolio-card fade-in">
+      <div class="card-preview">
+        <div class="t2">
+          <div class="t2-hero">
+            <div class="t2-ornament">◆ ◆ ◆</div>
+            <div class="t2-brand">Luxe Vintage</div>
+            <div class="t2-title">Premium Lederjacke</div>
+            <div class="t2-detail">Echtes Lammleder · Vintage Edition · Gr. M</div>
+            <div class="t2-divider">
+              <div class="t2-divider-line"></div>
+              <div class="t2-divider-diamond"></div>
+              <div class="t2-divider-line"></div>
+            </div>
+          </div>
+          <div class="t2-features">
+            <div class="t2-feat"><span class="t2-feat-icon">🧥</span><div class="t2-feat-label">Material</div><div class="t2-feat-val">Echtleder</div></div>
+            <div class="t2-feat"><span class="t2-feat-icon">✂️</span><div class="t2-feat-label">Handarbeit</div><div class="t2-feat-val">Vernäht</div></div>
+            <div class="t2-feat"><span class="t2-feat-icon">🏷️</span><div class="t2-feat-label">Zustand</div><div class="t2-feat-val">Neu m. Etikett</div></div>
+            <div class="t2-feat"><span class="t2-feat-icon">🔖</span><div class="t2-feat-label">Zertifikat</div><div class="t2-feat-val">Echtheit</div></div>
+          </div>
+          <div class="t2-mid">
+            <div class="t2-info-col"><div class="t2-info-label">Versand</div><div class="t2-info-val">DHL Express</div></div>
+            <div class="t2-info-sep"></div>
+            <div class="t2-info-col"><div class="t2-info-label">Rückgabe</div><div class="t2-info-val">14 Tage</div></div>
+            <div class="t2-info-sep"></div>
+            <div class="t2-info-col"><div class="t2-info-label">Größen</div><div class="t2-info-val">S – XL</div></div>
+            <div class="t2-info-sep"></div>
+            <div class="t2-info-col"><div class="t2-info-label">Zahlung</div><div class="t2-info-val">PayPal & Klarna</div></div>
+          </div>
+          <div class="t2-foot"><div class="t2-foot-text">MERCI POUR VOTRE INTÉRÊT · LUXE VINTAGE</div></div>
+        </div>
+      </div>
+      <div class="card-info"><div class="card-category">Mode & Kleidung</div><div class="card-tag">Dark Luxury</div></div>
+    </div>
+
+    <!-- T3: AUTO — Industrial Bold -->
+    <div class="portfolio-card fade-in">
+      <div class="card-preview">
+        <div class="t3">
+          <div class="t3-topbar">
+            <div class="t3-topbar-brand">AutoParts Pro</div>
+            <div class="t3-topbar-tags">
+              <div class="t3-topbar-tag dark">TÜV ✓</div>
+              <div class="t3-topbar-tag red">SOFORT LIEFERBAR</div>
+            </div>
+          </div>
+          <div class="t3-hero3">
+            <div class="t3-h-row">
+              <div class="t3-h-left">
+                <div class="t3-h-title">Sport-Bremsscheiben Set</div>
+                <div class="t3-h-sub">Gelocht & Geschlitzt · Vorderachse · 340mm</div>
+              </div>
+              <div class="t3-h-price">
+                <div class="t3-price-val">€249</div>
+                <div class="t3-price-lbl">Inkl. MwSt.</div>
+              </div>
+            </div>
+          </div>
+          <div class="t3-specs">
+            <div class="t3-spec"><div class="t3-spec-val">340mm</div><div class="t3-spec-lbl">Durchmesser</div></div>
+            <div class="t3-spec"><div class="t3-spec-val">28mm</div><div class="t3-spec-lbl">Stärke</div></div>
+            <div class="t3-spec"><div class="t3-spec-val">5×112</div><div class="t3-spec-lbl">Lochkreis</div></div>
+            <div class="t3-spec"><div class="t3-spec-val">Sport</div><div class="t3-spec-lbl">Typ</div></div>
+          </div>
+          <div class="t3-grid">
+            <div class="t3-grid-cell"><div class="t3-grid-icon">🚗</div><div class="t3-grid-text"><div class="t3-grid-h">Kompatibel</div><div class="t3-grid-p">BMW, Audi, VW, Mercedes</div></div></div>
+            <div class="t3-grid-cell"><div class="t3-grid-icon">📦</div><div class="t3-grid-text"><div class="t3-grid-h">Expressversand</div><div class="t3-grid-p">DHL 1-2 Werktage</div></div></div>
+            <div class="t3-grid-cell"><div class="t3-grid-icon">🛡️</div><div class="t3-grid-text"><div class="t3-grid-h">24 Mon. Garantie</div><div class="t3-grid-p">Gewährleistung inkl.</div></div></div>
+            <div class="t3-grid-cell"><div class="t3-grid-icon">⚙️</div><div class="t3-grid-text"><div class="t3-grid-h">Einbau-Anleitung</div><div class="t3-grid-p">PDF Download inklusive</div></div></div>
+          </div>
+          <div class="t3-foot3"><div class="t3-foot3-text">AUTOPARTS PRO</div><div class="t3-foot3-dot"></div><div class="t3-foot3-text">QUALITÄT SEIT 2019</div></div>
+        </div>
+      </div>
+      <div class="card-info"><div class="card-category">Auto & Zubehör</div><div class="card-tag">Industrial Bold</div></div>
+    </div>
+
+    <!-- T4: HOME — Warm Organic -->
+    <div class="portfolio-card fade-in">
+      <div class="card-preview">
+        <div class="t4">
+          <div class="t4-hero">
+            <div class="t4-leaf">🌿</div>
+            <div class="t4-brand">WohnGlück</div>
+            <div class="t4-title">Massivholz Esstisch</div>
+            <div class="t4-sub">Eiche Natur · 180 × 90 cm · Handgefertigt</div>
+            <div class="t4-dots">
+              <div class="t4-dot active"></div>
+              <div class="t4-dot"></div>
+              <div class="t4-dot"></div>
+            </div>
+          </div>
+          <div class="t4-pills">
+            <div class="t4-pill"><span class="t4-pill-icon">🪵</span><span class="t4-pill-text">Eiche Massiv</span></div>
+            <div class="t4-pill"><span class="t4-pill-icon">🌿</span><span class="t4-pill-text">FSC-zertifiziert</span></div>
+            <div class="t4-pill"><span class="t4-pill-icon">🔨</span><span class="t4-pill-text">Handarbeit</span></div>
+            <div class="t4-pill"><span class="t4-pill-icon">📐</span><span class="t4-pill-text">180cm</span></div>
+          </div>
+          <div class="t4-content">
+            <div class="t4-bigcard">
+              <div class="t4-bigcard-icon">🚚</div>
+              <div class="t4-bigcard-h">Speditionslieferung</div>
+              <div class="t4-bigcard-p">Frei Bordsteinkante innerhalb Deutschlands. Aufbauservice optional buchbar.</div>
+            </div>
+            <div class="t4-sidebar">
+              <div class="t4-mini"><div class="t4-mini-icon">🛡️</div><div class="t4-mini-text"><div class="t4-mini-h">5 Jahre Garantie</div><div class="t4-mini-p">Auf Holz & Verarbeitung</div></div></div>
+              <div class="t4-mini"><div class="t4-mini-icon">🧴</div><div class="t4-mini-text"><div class="t4-mini-h">Pflege-Set gratis</div><div class="t4-mini-p">Holzöl & Tuch inklusive</div></div></div>
+              <div class="t4-mini"><div class="t4-mini-icon">🔄</div><div class="t4-mini-text"><div class="t4-mini-h">30 Tage Rückgabe</div><div class="t4-mini-p">Kostenfreie Abholung</div></div></div>
+            </div>
+          </div>
+          <div class="t4-foot"><div class="t4-foot-text">Vielen Dank für Ihr Interesse · <strong>WohnGlück</strong> · Nachhaltig seit 2020</div></div>
+        </div>
+      </div>
+      <div class="card-info"><div class="card-category">Haushalt & Möbel</div><div class="card-tag">Warm Organic</div></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- VORHER / NACHHER -->
+<section id="vergleich">
+  <div class="section-header">
+    <div class="section-label">Der Unterschied</div>
+    <div class="section-title">Vorher vs. Nachher</div>
+  </div>
+  <div class="compare-container">
+    <div class="compare-box compare-before fade-in">
+      <div class="compare-label">Vorher</div>
+      <div class="compare-content">
+        <div class="ugly-listing">
+          <div class="ugly-title">!!! IPHONE 17 PRO MAX NEU OVP !!!</div>
+          <div class="ugly-line"></div>
+          <div class="ugly-blink">*** SCHNELL ZUGREIFEN ***</div>
+          <p>hallo verkaufe hier mein iphone 17 pro max 256gb in deep blue. ist nagelneu und original verpackt. rechnung vorhanden.</p>
+          <div class="ugly-line"></div>
+          <p class="ugly-small">versand mit dhl, zahlung per paypal oder überweisung. bei fragen einfach melden!!! privatverkauf keine rücknahme keine garantie!!!!!</p>
+        </div>
+      </div>
+    </div>
+    <div class="compare-arrow fade-in">→</div>
+    <div class="compare-box compare-after fade-in">
+      <div class="compare-label">Nachher</div>
+      <div class="compare-content">
+        <div class="nice-mini">
+          <div class="nice-mini-hero">
+            <div class="nice-mini-badge">DC SHOP 24</div>
+            <div class="nice-mini-title">iPhone 17 Pro Max</div>
+            <div class="nice-mini-sub">256 GB · Deep Blue</div>
+          </div>
+          <div class="nice-mini-hl">
+            <div><span class="hl-icon">📱</span><span class="hl-val">256 GB</span>Speicher</div>
+            <div><span class="hl-icon">✅</span><span class="hl-val">Apple</span>Garantie</div>
+            <div><span class="hl-icon">✨</span><span class="hl-val">Neu</span>Versiegelt</div>
+            <div><span class="hl-icon">🧾</span><span class="hl-val">Rechnung</span>Inklusive</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="section-header">
+    <div class="section-label">Ablauf</div>
+    <div class="section-title">In 3 Schritten zum Pro-Listing</div>
+  </div>
+  <div class="process-grid">
+    <div class="process-step fade-in"><div class="step-num">01</div><div class="step-title">Anfrage</div><div class="step-desc">Schick mir dein aktuelles Listing oder beschreib mir deinen Shop. Ich schaue mir an, was du brauchst.</div></div>
+    <div class="process-step fade-in"><div class="step-num">02</div><div class="step-title">Design</div><div class="step-desc">Innerhalb von 24h bekommst du einen Entwurf. Eine Korrektur-Runde ist inklusive.</div></div>
+    <div class="process-step fade-in"><div class="step-num">03</div><div class="step-title">Fertig</div><div class="step-desc">Du bekommst den HTML-Code — einfach in die eBay-Beschreibung einfügen. Kein Technik-Wissen nötig.</div></div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="section-header">
+    <div class="section-label">Preise</div>
+    <div class="section-title">Transparente Preise, kein Abo</div>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card fade-in">
+      <div class="pricing-tier">Starter</div>
+      <div class="pricing-amount">€79 <span>einmalig</span></div>
+      <div class="pricing-desc">Perfekt für einzelne Top-Produkte</div>
+      <ul class="pricing-features"><li>1 Artikelseite</li><li>Mobiloptimiert</li><li>eBay-konformes HTML</li><li>1 Korrektur-Runde</li></ul>
+      <a href="#kontakt" class="btn btn-ghost">Anfragen</a>
+    </div>
+    <div class="pricing-card featured fade-in">
+      <div class="pricing-tier">Shop</div>
+      <div class="pricing-amount">€179 <span>einmalig</span></div>
+      <div class="pricing-desc">Ein Template für deinen ganzen Shop</div>
+      <ul class="pricing-features"><li>1 Master-Template</li><li>Anpassbar für alle Produkte</li><li>Shop-Branding integriert</li><li>2 Korrektur-Runden</li></ul>
+      <a href="#kontakt" class="btn btn-primary">Anfragen</a>
+    </div>
+    <div class="pricing-card fade-in">
+      <div class="pricing-tier">Premium</div>
+      <div class="pricing-amount">€349 <span>einmalig</span></div>
+      <div class="pricing-desc">Komplett-Paket für Power-Seller</div>
+      <ul class="pricing-features"><li>Bis zu 5 Templates</li><li>Individuelle Farbwelten</li><li>Vertrauens-Elemente</li><li>Unbegrenzte Korrekturen</li></ul>
+      <a href="#kontakt" class="btn btn-ghost">Anfragen</a>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section" id="kontakt">
+  <div class="section-label">Kontakt</div>
+  <div class="section-title">Bereit für bessere Listings?</div>
+  <p>Schreib mir einfach eine Nachricht auf eBay — ich melde mich innerhalb von 24 Stunden bei dir.</p>
+  <a href="#" class="btn btn-primary" onclick="alert('Hier kommt dein eBay-Profillink hin!'); return false;">Auf eBay kontaktieren →</a>
+  <div class="cta-contact-info">Oder such nach <strong>ListCraft</strong> auf eBay Kleinanzeigen</div>
+</section>
+
+<footer>
+  <div>© 2026 ListCraft — Professionelle eBay Artikelseiten</div>
+  <div>Made in Germany 🇩🇪</div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
